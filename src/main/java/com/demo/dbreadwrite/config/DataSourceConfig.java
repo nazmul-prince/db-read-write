@@ -4,6 +4,8 @@ import jakarta.persistence.EntityManagerFactory;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -32,26 +34,52 @@ enum DataSourceType {
 @EnableTransactionManagement
 public class DataSourceConfig {
 
+//    @Bean(name = "readDataSource")
+//    public DataSource readDataSource(@Value("${read.datasource.url}") String url,
+//                                     @Value("${read.datasource.username}") String username,
+//                                     @Value("${read.datasource.password}") String password) {
+//        BasicDataSource readDataSource = new BasicDataSource();
+//        readDataSource.setUrl(url);
+//        readDataSource.setUsername(username);
+//        readDataSource.setPassword(password);
+//        return readDataSource;
+//    }
+
+//    @Bean(name = "writeDataSource")
+//    public DataSource writeDataSource(@Value("${write.datasource.url}") String url,
+//                                      @Value("${write.datasource.username}") String username,
+//                                      @Value("${write.datasource.password}") String password) {
+//        BasicDataSource writeDataSource = new BasicDataSource();
+//        writeDataSource.setUrl(url);
+//        writeDataSource.setUsername(username);
+//        writeDataSource.setPassword(password);
+//        return writeDataSource;
+//    }
+
+    @Bean
+    @ConfigurationProperties("spring.read.datasource")
+    public DataSourceProperties readDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
     @Bean(name = "readDataSource")
-    public DataSource readDataSource(@Value("${read.datasource.url}") String url,
-                                     @Value("${read.datasource.username}") String username,
-                                     @Value("${read.datasource.password}") String password) {
-        BasicDataSource readDataSource = new BasicDataSource();
-        readDataSource.setUrl(url);
-        readDataSource.setUsername(username);
-        readDataSource.setPassword(password);
-        return readDataSource;
+    public DataSource readDataSource() {
+        return readDataSourceProperties()
+                .initializeDataSourceBuilder()
+                .build();
+    }
+
+    @Bean
+    @ConfigurationProperties("spring.write.datasource")
+    public DataSourceProperties writeDataSourceProperties() {
+        return new DataSourceProperties();
     }
 
     @Bean(name = "writeDataSource")
-    public DataSource writeDataSource(@Value("${write.datasource.url}") String url,
-                                      @Value("${write.datasource.username}") String username,
-                                      @Value("${write.datasource.password}") String password) {
-        BasicDataSource writeDataSource = new BasicDataSource();
-        writeDataSource.setUrl(url);
-        writeDataSource.setUsername(username);
-        writeDataSource.setPassword(password);
-        return writeDataSource;
+    public DataSource writeDataSource() {
+        return writeDataSourceProperties()
+                .initializeDataSourceBuilder()
+                .build();
     }
 
     @Bean(name = "routingDataSource")

@@ -18,7 +18,7 @@ public interface RegionRepository extends JpaRepository<RegionEntity, Integer> {
 
     @Transactional(readOnly = false)
     @Modifying
-    @Query("update RegionEntity set nameBn = 'test' where id=?1")
+    @Query("update RegionEntity set nameBn = 'test2222' where id=?1")
     void updateNameBnById(Integer id);
 
     @Transactional(readOnly = false)
