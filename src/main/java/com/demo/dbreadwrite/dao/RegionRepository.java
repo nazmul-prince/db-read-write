@@ -21,6 +21,8 @@ public interface RegionRepository extends JpaRepository<RegionEntity, Integer> {
     @Query("update RegionEntity set nameBn = 'test' where id=?1")
     void updateNameBnById(Integer id);
 
+    @Transactional(readOnly = false)
+    @Modifying
     @Query(value = "update region set name_bn = 'testttttt' where id=?1", nativeQuery = true)
     void updateNameBnNativeById(Integer id);
 
